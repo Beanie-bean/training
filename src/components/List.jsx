@@ -7,8 +7,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import dayjs from 'dayjs';
-
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
@@ -20,7 +20,7 @@ import AddTraining from './addTraining';
 function List() {
     const [customers, setCustomers] = useState([])
     const [trainings, setTrainings] = useState([])
-
+    
     const [tabIndex, setTabIndex] = useState(0);
     const [open, setOpen] = useState(false);
 
@@ -66,7 +66,6 @@ function List() {
             type: "fitGridWidth",
         },
     };
-    console.log(trainings)
     const handleTabChange = (event, newIndex) => {
         setTabIndex(newIndex)
     }
@@ -105,6 +104,22 @@ function List() {
     const handleClose = () => {
         setOpen(false)
     }
+
+    const handleClickExport = () => {
+        let csv = "First Name,Last Name,Email,Phone,Address,Postcode,City\n";
+        customers.forEach(customer => {
+            csv += `${customer.firstname},${customer.lastname},${customer.email},${customer.phone},${customer.streetaddress},${customer.postcode},${customer.city}\n`
+        });
+        const blob = new Blob([csv], {type: "text/csv"})
+
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "customers.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
     return (
         <>
             <div>
@@ -116,8 +131,14 @@ function List() {
                     <Tabs value={tabIndex} onChange={handleTabChange}>
                         <Tab label='Customers' index={0} />
                         <Tab label='Trainings' index={1} />
+                        <Tab label='Calendar' index={2} />
                     </Tabs>
-                    <AddCustomer handleFetch={handleFetch} />
+                    {tabIndex === 0 && (
+                        <><AddCustomer handleFetch={handleFetch} />
+                        <IconButton onClick={handleClickExport} size="large">
+                            <FileUploadIcon />
+                        </IconButton></>
+                    )}
                 </Box>
             </div>
 
@@ -141,6 +162,11 @@ function List() {
                         pagination={true}
                         paginationAutoPageSize={true}
                         suppressCellFocus={true}
+                    />
+                )}
+                {tabIndex === 2 && (
+                    <AgGridReact
+                        
                     />
                 )}
             </div>
