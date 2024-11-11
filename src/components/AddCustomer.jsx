@@ -44,10 +44,10 @@ export default function AddCustomer(props) {
             <Button onClick={handleClickOpen} variant="outlined" size="small" color="primary" aria-label="add">
                 Add Customer
             </Button>
-            
+
             <Dialog
                 open={open}
-                onClose={handleClose} 
+                onClose={handleClose}
             >
                 <DialogTitle>New Customer</DialogTitle>
                 <DialogContent>
@@ -65,6 +65,24 @@ export default function AddCustomer(props) {
                         value={customer.lastname}
                         name="lastname"
                         label="Last name"
+                        variant="standard"
+                        margin="dense"
+                        fullWidth
+                    />
+                    <TextField
+                        onChange={event => setCustomer({ ...customer, email: event.target.value })}
+                        value={customer.email}
+                        name="email"
+                        label="Email"
+                        variant="standard"
+                        margin="dense"
+                        fullWidth
+                    />
+                    <TextField
+                        onChange={event => setCustomer({ ...customer, phone: event.target.value })}
+                        value={customer.phone}
+                        name="phone"
+                        label="Phone"
                         variant="standard"
                         margin="dense"
                         fullWidth
@@ -92,24 +110,6 @@ export default function AddCustomer(props) {
                         value={customer.city}
                         name="city"
                         label="City"
-                        variant="standard"
-                        margin="dense"
-                        fullWidth
-                    />
-                    <TextField
-                        onChange={event => setCustomer({ ...customer, email: event.target.value })}
-                        value={customer.email}
-                        name="email"
-                        label="Email"
-                        variant="standard"
-                        margin="dense"
-                        fullWidth
-                    />
-                    <TextField
-                        onChange={event => setCustomer({ ...customer, phone: event.target.value })}
-                        value={customer.phone}
-                        name="phone"
-                        label="Phone"
                         variant="standard"
                         margin="dense"
                         fullWidth
