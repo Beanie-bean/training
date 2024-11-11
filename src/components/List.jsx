@@ -20,6 +20,8 @@ import { AgGridReact } from 'ag-grid-react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
 function List() {
     const [customers, setCustomers] = useState([])
     const [trainings, setTrainings] = useState([])
@@ -143,6 +145,18 @@ function List() {
         end: dayjs(trainingsData.date).add(trainingsData.duration, 'minute').toDate()
     }));
 
+    const activityData = trainings.map(activityData => ({
+        activity: activityData.activity,
+        duration: activityData.duration
+    }));
+
+    const chartGroup = Object.groupBy(activityData, (activityName) => activityName.activity)
+    const chartData = Object.entries(chartGroup).map(([activity, durations]) => ({
+        activity: activity,
+        duration: durations.reduce((duration, amount) => duration + amount.duration, 0)
+    }));
+
+    console.log(chartData)
     return (
         <>
             <Box sx={{
@@ -154,6 +168,8 @@ function List() {
                     <Tab label='Customers' index={0} />
                     <Tab label='Trainings' index={1} />
                     <Tab label='Calendar' index={2} />
+                    <Tab label='Chart' index={3} />
+
                 </Tabs>
                 {tabIndex === 0 && (
                     <>
@@ -194,13 +210,24 @@ function List() {
                         style={{ height: 500 }}
                     />
                 )}
-                <Snackbar
+                {tabIndex === 3 && (
+                    <ResponsiveContainer aspect={2.0}>
+                        <BarChart margin={{ top: 10 }} data={chartData} >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="activity" />
+                            <YAxis tickCount={10} />
+                            <Tooltip />
+                            <Bar dataKey="duration" fill="#207FE0" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                )}
+                < Snackbar
                     open={open}
                     message="Delete Successful"
                     autoHideDuration={3000}
                     onClose={handleClose}
                 />
-            </div>
+            </div >
         </>
     )
 }
