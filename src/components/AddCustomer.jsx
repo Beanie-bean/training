@@ -1,11 +1,13 @@
 import { useState } from 'react';
+
+import { saveCustomer } from '../trainingapi';
+
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { saveCustomer } from '../trainingapi';
 
 export default function AddCustomer(props) {
     const [customer, setCustomer] = useState({
@@ -17,15 +19,8 @@ export default function AddCustomer(props) {
         email: "",
         phone: ""
     });
+
     const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const handleSave = () => {
         saveCustomer(customer)
@@ -36,80 +31,88 @@ export default function AddCustomer(props) {
             .catch(err => console.error(err))
     }
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <>
-            <Button variant="outlined" size="small" onClick={handleClickOpen} color="primary" aria-label="add">
+            <Button onClick={handleClickOpen} variant="outlined" size="small" color="primary" aria-label="add">
                 Add Customer
             </Button>
             
             <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={handleClose} 
             >
                 <DialogTitle>New Customer</DialogTitle>
                 <DialogContent>
                     <TextField
-                        margin="dense"
-                        name="firstname"
-                        value={customer.firstname}
                         onChange={event => setCustomer({ ...customer, firstname: event.target.value })}
+                        value={customer.firstname}
+                        name="firstname"
                         label="First name"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="lastname"
-                        value={customer.lastname}
                         onChange={event => setCustomer({ ...customer, lastname: event.target.value })}
+                        value={customer.lastname}
+                        name="lastname"
                         label="Last name"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="streetaddress"
-                        value={customer.streetaddress}
                         onChange={event => setCustomer({ ...customer, streetaddress: event.target.value })}
+                        value={customer.streetaddress}
+                        name="streetaddress"
                         label="Street address"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="postcode"
-                        value={customer.postcode}
                         onChange={event => setCustomer({ ...customer, postcode: event.target.value })}
+                        value={customer.postcode}
+                        name="postcode"
                         label="Postcode"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="city"
-                        value={customer.city}
                         onChange={event => setCustomer({ ...customer, city: event.target.value })}
+                        value={customer.city}
+                        name="city"
                         label="City"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="email"
-                        value={customer.email}
                         onChange={event => setCustomer({ ...customer, email: event.target.value })}
+                        value={customer.email}
+                        name="email"
                         label="Email"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="phone"
-                        value={customer.phone}
                         onChange={event => setCustomer({ ...customer, phone: event.target.value })}
+                        value={customer.phone}
+                        name="phone"
                         label="Phone"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                 </DialogContent>
                 <DialogActions>

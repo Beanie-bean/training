@@ -1,22 +1,20 @@
 import { useState } from 'react';
+
+import { saveTraining } from '../trainingapi';
+
+import dayjs from 'dayjs';
+import updateLocale from "dayjs/plugin/updateLocale";
+
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { saveTraining } from '../trainingapi';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import updateLocale from "dayjs/plugin/updateLocale";
 
-dayjs.extend(updateLocale);
-
-dayjs.updateLocale("en", {
-  weekStart: 1
-});
 
 
 export default function AddTraining(props) {
@@ -26,16 +24,14 @@ export default function AddTraining(props) {
         activity: "",
         customer: ""
     });
+    
     const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-        setTraining({...training, customer: props.data._links.customer.href})
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    
+    dayjs.extend(updateLocale);
+    
+    dayjs.updateLocale("en", {
+      weekStart: 1
+    });
 
     const handleSave = () => {
         saveTraining(training)
@@ -46,12 +42,22 @@ export default function AddTraining(props) {
             .catch(err => console.error(err))
     }
 
+    const handleClickOpen = () => {
+        setOpen(true);
+        setTraining({...training, customer: props.data._links.customer.href})
+    };
+    
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const changeDate = (newDate) => {
         setTraining({ ...training, date: newDate })
     };
+
     return (
         <>
-            <Button size="small" onClick={handleClickOpen} color="primary" aria-label="add">
+            <Button onClick={handleClickOpen} size="small" color="primary" aria-label="add">
                 Add Training
             </Button>
         
@@ -62,33 +68,34 @@ export default function AddTraining(props) {
                 <DialogTitle>New Training</DialogTitle>
                 <DialogContent>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            sx={{ marginTop: 1 }}
-                            margin="dense"
+                        <DateTimePicker
+                            onChange={(date) => changeDate(date)}
+                            value={dayjs(training.date)}
+                            format='DD/MM/YYYY HH:mm'
+                            ampm={false}
                             name="date"
                             label="Date"
-                            format="DD/MM/YYYY"
-                            value={dayjs(training.date)}
-                            onChange={(date) => changeDate(date)}
+                            margin="dense"
+                            sx={{ marginTop: 1 }}
                         />
                     </LocalizationProvider>
                     <TextField
-                        margin="dense"
-                        name="duration"
-                        value={training.duration}
                         onChange={event => setTraining({ ...training, duration: event.target.value })}
+                        value={training.duration}
+                        name="duration"
                         label="Duration"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                     <TextField
-                        margin="dense"
-                        name="activity"
-                        value={training.activity}
                         onChange={event => setTraining({ ...training, activity: event.target.value })}
+                        value={training.activity}
+                        name="activity"
                         label="Activity"
-                        fullWidth
                         variant="standard"
+                        margin="dense"
+                        fullWidth
                     />
                 </DialogContent>
                 <DialogActions>
